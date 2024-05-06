@@ -7,12 +7,15 @@ hero:
   text: "个人博客"
   tagline: 记录自己成长
   image:
-    src: /guide.svg
+    src: /public/logo.svg
     alt: vitepress
   actions:
     - theme: brand
-      text: Get Started
-      link: /engineering/knowPackage
+      text: Markdown Examples
+      link: /markdown-examples
+    - theme: alt
+      text: API Examples
+      link: /api-examples
     - theme: alt
       text: github
       link: "https://github.com/liaoyansheng"
