@@ -7,7 +7,7 @@ hero:
   text: "lys个人博客"
   tagline: 记录自己成长
   image:
-    src: /public/logo.png
+    src: /logo.png
     alt: vitepress
   actions:
     - theme: brand
