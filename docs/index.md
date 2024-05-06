@@ -7,7 +7,7 @@ hero:
   text: "个人博客"
   tagline: 记录自己成长
   image:
-    src: /logo.svg
+    src: /guide.svg
     alt: vitepress
   actions:
     - theme: brand
