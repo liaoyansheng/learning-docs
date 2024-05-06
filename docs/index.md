@@ -22,5 +22,5 @@ features:
   - title: Phased
     details: 一步一个脚印,踏实前行.在人生的道路上,每一个脚步都是成长的标记,每一次踏出的力量都是向目标迈进的驱动力.
   - title: Persist
-    details: 相信
+    details: 相信自己能赚大钱
 ---
