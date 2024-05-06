@@ -9,7 +9,10 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: 'Examples', link: '/markdown-examples' },
+      { text: 'Hello 算法', link: 'https://www.hello-algo.com/chapter_hello_algo/' },
+      { text: 'CDN', link: 'https://www.bootcdn.cn/' },
+      
     ],
 
     sidebar: [
