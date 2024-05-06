@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "Path of Learning"
-  text: "个人博客"
+  text: "lys个人博客"
   tagline: 记录自己成长
   image:
     src: /public/logo.png
