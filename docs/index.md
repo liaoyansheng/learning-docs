@@ -15,7 +15,7 @@ hero:
       link: /engineering/knowPackage
     - theme: alt
       text: github
-      link: "https://github.com/yycdjh"
+      link: "https://github.com/liaoyansheng"
 features:
   - title: Record
     details: 好记性不如烂笔,站在岸上学不会游泳.泉水挑不干,知识学不完.
