@@ -3,23 +3,24 @@
 layout: home
 
 hero:
-  name: "My Awesome Project"
-  text: "A VitePress Site"
-  tagline: My great project tagline
+  name: "Path of Learning"
+  text: "个人博客"
+  tagline: 记录自己成长
+  image:
+    src: /logo.svg
+    alt: vitepress
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Get Started
+      link: /engineering/knowPackage
     - theme: alt
-      text: API Examples
-      link: /api-examples
-
+      text: github
+      link: "https://github.com/yycdjh"
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: Record
+    details: 好记性不如烂笔,站在岸上学不会游泳.泉水挑不干,知识学不完.
+  - title: Phased
+    details: 一步一个脚印,踏实前行.在人生的道路上,每一个脚步都是成长的标记,每一次踏出的力量都是向目标迈进的驱动力.
+  - title: Persist
+    details: 相信
 ---
-
