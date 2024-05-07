@@ -12,12 +12,15 @@ hero:
     alt: vitepress
   actions:
     - theme: brand
+      text: vue3基础知识点
+      link: /vue3/vue3-base
+    - theme: alt
       text: Markdown Examples
       link: /markdown-examples
     - theme: alt
       text: API Examples
       link: /api-examples
-    - theme: alt
+    - theme: brand
       text: to my github
       link: "https://github.com/liaoyansheng"
 features:

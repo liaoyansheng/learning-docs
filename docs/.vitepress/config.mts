@@ -9,7 +9,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' },
+      { text: 'vue3官网', link: 'https://cn.vuejs.org/guide/introduction.html' },
       { text: 'Hello 算法', link: 'https://www.hello-algo.com/chapter_hello_algo/' },
       { text: 'CDN', link: 'https://www.bootcdn.cn/' },
       
@@ -19,6 +19,7 @@ export default defineConfig({
       {
         text: 'Examples',
         items: [
+          { text: 'vue3基础', link: '/vue3/vue3-base' },
           { text: 'Markdown Examples', link: '/markdown-examples' },
           { text: 'Runtime API Examples', link: '/api-examples' }
         ]
