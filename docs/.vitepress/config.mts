@@ -16,7 +16,7 @@ export default defineConfig({
 
     sidebar: [
       {
-        text: '前端',
+        text: '前端测试',
         items: [
           { text: 'vue3基础', link: '/vue3/vue3-base' }
         ]
