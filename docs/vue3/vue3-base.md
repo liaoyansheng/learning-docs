@@ -330,7 +330,7 @@ npm run dev
     - `updated` =======>`onUpdated`
     - `beforeUnmount` ==>`onBeforeUnmount`
     - `unmounted` =====>`onUnmounted`
-
+-<strong style="color:red">注意：两种同时写的话，setup里对应的函数优先级更高</strong>
 
 ## 9.自定义hook函数
 
@@ -344,11 +344,19 @@ npm run dev
 ## 10.toRef
 
 - 作用：创建一个 ref 对象，其value值指向另一个对象中的某个属性。
-- 语法：```const name = toRef(person,'name')```
+- 语法：
+```js
+return { 
+  name: toRef(person, 'name'),
+  salary: toRef(person.job.jd, 'salary')
+}
+```
 - 应用:   要将响应式对象中的某个属性单独提供给外部使用时。
-
-
-- 扩展：```toRefs``` 与```toRef```功能一致，但可以批量创建多个 ref 对象，语法：```toRefs(person)```
+- 扩展：```toRefs``` 与```toRef```功能一致，但可以批量创建多个 ref 对象
+- 语法：
+```js
+return { ...toRefs(person) }
+```
 
 
 ## 三、其它 Composition API
