@@ -250,6 +250,7 @@ npm run dev
 - 两个小“坑”：
 
     - 监视reactive定义的响应式数据时：oldValue无法正确获取、强制开启了深度监视（deep配置失效）。
+    <strong style="color:red">注意：watch监视reactive定义的整个对象时，oldValue的值和newValue一样，都为newValue的值（ object引用数据类型，指针指向同一个内存）</strong>
     - 监视reactive定义的响应式数据中某个属性时：deep配置有效。
 
   ```js
@@ -270,7 +271,7 @@ npm run dev
   watch(person,(newValue,oldValue)=>{
   	console.log('person变化了',newValue,oldValue)
   },{immediate:true,deep:false}) //此处的deep配置不再奏效
-  
+
   //情况四：监视reactive定义的响应式数据中的某个属性
   watch(()=>person.job,(newValue,oldValue)=>{
   	console.log('person的job变化了',newValue,oldValue)
@@ -307,6 +308,11 @@ npm run dev
   })
   ```
 ## 8.生命周期
+
+<div style="display:inline-block;">
+  <img src="https://v2.cn.vuejs.org/images/lifecycle.png" alt="vue2.x的生命周期" style="float:left;width:50%">
+  <img src="https://cn.vuejs.org/assets/lifecycle_zh-CN.W0MNXI0C.png" alt="vue3.0的生命周期" style="float:right;width:50%;height: fit-content;">
+</div>
 
 [vue2.x的生命周期](https://v2.cn.vuejs.org/images/lifecycle.png)
 
@@ -367,7 +373,7 @@ npm run dev
 ## 3.toRaw 与 markRaw
 
 - toRaw：
-    - 作用：将一个由```reactive```生成的<strong style="color:orange">响应式对象</strong>转为<strong style="color:orange">普通对象</strong>。
+    - 作用：将一个由```reactive```生成的c转为<strong style="color:orange">普通对象</strong>。
     - 使用场景：用于读取响应式对象对应的普通对象，对这个普通对象的所有操作，不会引起页面更新。
 - markRaw：
     - 作用：标记一个对象，使其永远不会再成为响应式对象。
