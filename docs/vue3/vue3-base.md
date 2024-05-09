@@ -377,18 +377,25 @@ return { ...toRefs(person) }
 - shallowReadonly：让一个响应式数据变为只读的（浅只读）。
 - 应用场景: 不希望数据(尤其是这个数据是来自与其他组件时)被修改时。
 
-
 ## 3.toRaw 与 markRaw
 
 - toRaw：
     - 作用：将一个由```reactive```生成的c转为<strong style="color:orange">普通对象</strong>。
     - 使用场景：用于读取响应式对象对应的普通对象，对这个普通对象的所有操作，不会引起页面更新。
+    ```js
+    const p = toRaw(person)
+    ```
 - markRaw：
     - 作用：标记一个对象，使其永远不会再成为响应式对象。
     - 应用场景:
         1. 有些值不应被设置为响应式的，例如复杂的第三方类库等。
         2. 当渲染具有不可变数据源的大列表时，跳过响应式转换可以提高性能。
-
+    ```js
+    function addCar() {
+      let car = {name:'宝马'，price:40}
+      person.car = markRaw(car)
+    }
+    ```
 
 
 ## 4.customRef
