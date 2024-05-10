@@ -501,9 +501,19 @@ console.log(isProxy(sum))//false
 
 使用传统OptionsAPI中，新增或者修改一个需求，就需要分别在data，methods，computed里修改 。
 
+<div style="display:inline-block;">
+  <img src="../public/OptionsAPI1.gif" alt="" style="margin-bottom:10px;">
+  <img src="../public/OptionsAPI2.gif" alt="">
+</div>
+
 ## 2.Composition API 的优势
 
 我们可以更加优雅的组织我们的代码，函数。让相关功能的代码更加有序的组织在一起。
+
+<div style="display:inline-block;">
+  <img src="../public/CompositionAPI1.gif" alt="" style="margin-bottom:10px;">
+  <img src="../public/CompositionAPI2.gif" alt="">
+</div>
 
 ## 五、新的组件
 
