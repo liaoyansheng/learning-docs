@@ -482,7 +482,18 @@ return { ...toRefs(person) }
 - isReactive: 检查一个对象是否是由 `reactive` 创建的响应式代理
 - isReadonly: 检查一个对象是否是由 `readonly` 创建的只读代理
 - isProxy: 检查一个对象是否是由 `reactive` 或者 `readonly` 方法创建的代理  
+```js
+let car = reactive({name:'奔驰'，price:'40w'})
+let sum = ref(0)
+let car2 = readonly(car)
 
+console.log(isRef(sum))//true
+console.log(isReactive(car))//true
+console.log(isReadonly(car2))//true
+console.log(isProxy(car))//true
+console.log(isProxy(car2))//true
+console.log(isProxy(sum))//false
+```
 
 ## 四、Composition API 的优势
 
