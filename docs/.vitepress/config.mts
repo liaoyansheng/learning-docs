@@ -18,7 +18,8 @@ export default defineConfig({
       {
         text: '前端',
         items: [
-          { text: 'vue3基础', link: '/vue3/vue3-base' }
+          { text: 'vue3基础', link: '/vue3/vue3-base' },
+          { text: '前端面试题', link: '/jobInterview/index' }
         ]
       },
       {

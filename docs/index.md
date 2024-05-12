@@ -12,6 +12,9 @@ hero:
     alt: vitepress
   actions:
     - theme: brand
+      text: 前端面试题
+      link: /jobInterview/index
+    - theme: brand
       text: vue3基础知识点
       link: /vue3/vue3-base
     - theme: alt
