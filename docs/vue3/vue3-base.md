@@ -526,7 +526,7 @@ console.log(isProxy(sum))//false
 ## 2.Teleport
 
 - 什么是Teleport？—— `Teleport` 是一种能够将我们的<strong style="color:#DD5145">组件html结构</strong>移动到指定位置的技术。
-
+- <strong style="color:#DD5145">移动位置可写：body、html节点，#app CSS选择器</strong>
   ```vue
   <teleport to="移动位置">
   	<div v-if="isShow" class="mask">
@@ -540,7 +540,7 @@ console.log(isProxy(sum))//false
 
 ## 3.Suspense
 - 等待异步组件时渲染一些额外内容，让应用有更好的用户体验
-
+- 使用场景：异步加载组件：加快首页加载速度；首页白屏：制作骨架屏
 - 使用步骤：
 
     - 异步引入组件
