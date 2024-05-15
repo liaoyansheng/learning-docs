@@ -5,6 +5,15 @@
 ### 3.Object.freeze（vue2）冻结数组取消响应式，因为大多时候都是展示
 ### 4.使用虚拟列表 vue-virtual-scroller 和 vue-virtual-scroll-list 等插件
 ### 5.自己实现可视区域渲染
+```js
+var currentInstance = getCurrentInstance();
+function handleScroll () {
+    const scrollTop = currentInstance.ctx.$refs.container.scrollTop
+    start.value = Math.floor(scrollTop / props.size)
+    end.value = start.value + props.showNumber
+    console.log('@@@@', start.value, end.value)
+}
+```
 
 ## 函数的节流和防抖
 
