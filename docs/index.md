@@ -8,7 +8,7 @@ hero:
   text: "lys博客"
   tagline: 记录学习笔记
   image:
-    src: /coder.gif
+    src: /chapter_hello_algo.jpg
     alt: vitepress
   actions:
     - theme: brand
