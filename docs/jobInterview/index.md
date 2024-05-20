@@ -1,3 +1,30 @@
+## 扁平化数组以及数组去重
+编写一个程序，将数组扁平化，并去除其中重复部分，最终得到一个升序且不重复的数组：
+```js
+let  arr = [3, 12, 1, 2, [3, 4, 4, [5, 4,6, [8,9,7, 8, [9, 10, 11]]]]];
+```
+### 方法一：递归
+```js
+let result = [];
+function fn(array){
+  for(let i = 0; i < array.length; i++){
+    let item = array[i];
+    if(Array.isArray(array[i])){
+      fn(item);
+    }else{
+      result.push(item)
+    }
+  }
+  return result;
+}
+fn(arr)
+```
+### 方法二：数组.some
+```js
+while(arr.some( item => Array.isArray(item))){
+  arr = [].concat(...arr);
+}
+```
 ## 长列表页面滚动卡顿性能优化方法
 
 ### 1.懒加载，分页
