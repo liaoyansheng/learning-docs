@@ -543,7 +543,7 @@ function test(){
 
 作用：根据已有数据计算出新数据（和`Vue2`中的`computed`作用一致）。
 
-<img src="images/computed.gif" style="zoom:20%;" />  
+<img src="./images/computed.gif" style="zoom:20%;" />  
 
 ```vue
 <template>
