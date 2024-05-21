@@ -19,12 +19,33 @@ function fn(array){
 }
 fn(arr)
 ```
+
 ### 方法二：数组.some
 ```js
-while(arr.some( item => Array.isArray(item))){
+while( arr.some(item => Array.isArray(item)) ){
   arr = [].concat(...arr);
 }
 ```
+
+### 方法三：flat和flatMap方法（为ES2019(ES10)方法，目前还未在所有浏览器完全兼容。）
+- flat不传参数时，默认扁平化一层
+- flat传入一个整数参数，整数即扁平化的层数
+- Infinity 关键字作为参数时，无论多少层嵌套，都会转为一维数组
+- 传入 <=0 的整数将返回原数组，不扁平化
+- 如果原数组有空位，flat()方法会跳过空位。
+```js
+const arr = nestedArray.flat(Infinity)
+const result = Array.from( new Set(arr)).sort((a:any, b:any) => a - b )
+```
+```js
+//数组扁平化实现
+function flatten(arr) {
+  return arr.reduce((pre, cur) => {
+    return pre.concat(Array.isArray(cur) ? flatten(cur) : cur);
+  }, [])
+}
+```
+
 ## 长列表页面滚动卡顿性能优化方法
 
 ### 1.懒加载，分页
