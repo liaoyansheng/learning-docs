@@ -1245,7 +1245,7 @@ function test(){
 
 ## 4.1. 【对路由的理解】
 
-<img src="./image-20231018144351536.png" alt="image-20231018144351536" style="zoom:20%;border-radius:40px" /> 
+<img src="./images/image-20231018144351536.png" alt="image-20231018144351536" style="zoom:20%;border-radius:40px" /> 
 
 ## 4.2. 【基本切换效果】
 
