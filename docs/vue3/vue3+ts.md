@@ -992,3 +992,500 @@ function test(){
   defineExpose({name,age})
 </script>
 ```
+
+
+
+## 3.12. 【props】
+
+> ```js
+>// 定义一个接口，限制每个Person对象的格式
+> export interface PersonInter {
+>  id:string,
+>  name:string,
+>     age:number
+>    }
+>    
+> // 定义一个自定义类型Persons
+> export type Persons = Array<PersonInter>
+> ```
+> 
+> `App.vue`中代码：
+>
+> ```vue
+><template>
+> 	<Person :list="persons"/>
+> </template>
+>   
+> <script lang="ts" setup name="App">
+>   import Person from './components/Person.vue'
+>   import {reactive} from 'vue'
+>     import {type Persons} from './types'
+>   
+>     let persons = reactive<Persons>([
+>      {id:'e98219e12',name:'张三',age:18},
+>       {id:'e98219e13',name:'李四',age:19},
+>        {id:'e98219e14',name:'王五',age:20}
+>      ])
+>    </script>
+>   
+> ```
+> 
+> `Person.vue`中代码：
+>
+> ```Vue
+><template>
+> <div class="person">
+>  <ul>
+>      <li v-for="item in list" :key="item.id">
+>         {{item.name}}--{{item.age}}
+>       </li>
+>     </ul>
+>    </div>
+>    </template>
+>   
+> <script lang="ts" setup name="Person">
+> import {defineProps} from 'vue'
+> import {type PersonInter} from '@/types'
+>   
+>   // 第一种写法：仅接收
+> // const props = defineProps(['list'])
+>   
+>   // 第二种写法：接收+限制类型
+> // defineProps<{list:Persons}>()
+>   
+>   // 第三种写法：接收+限制类型+指定默认值+限制必要性
+> let props = withDefaults(defineProps<{list?:Persons}>(),{
+>      list:()=>[{id:'asdasg01',name:'小猪佩奇',age:18}]
+>   })
+>    console.log(props)
+>   </script>
+>   ```
+> 
+
+## 3.13. 【生命周期】
+
+* 概念：`Vue`组件实例在创建时要经历一系列的初始化步骤，在此过程中`Vue`会在合适的时机，调用特定的函数，从而让开发者有机会在特定阶段运行自己的代码，这些特定的函数统称为：生命周期钩子
+
+* 规律：
+
+  > 生命周期整体分为四个阶段，分别是：**创建、挂载、更新、销毁**，每个阶段都有两个钩子，一前一后。
+
+* `Vue2`的生命周期
+
+  > 创建阶段：`beforeCreate`、`created`
+  >
+  > 挂载阶段：`beforeMount`、`mounted`
+  >
+  > 更新阶段：`beforeUpdate`、`updated`
+  >
+  > 销毁阶段：`beforeDestroy`、`destroyed`
+
+* `Vue3`的生命周期
+
+  > 创建阶段：`setup`
+  >
+  > 挂载阶段：`onBeforeMount`、`onMounted`
+  >
+  > 更新阶段：`onBeforeUpdate`、`onUpdated`
+  >
+  > 卸载阶段：`onBeforeUnmount`、`onUnmounted`
+
+* 常用的钩子：`onMounted`(挂载完毕)、`onUpdated`(更新完毕)、`onBeforeUnmount`(卸载之前)
+
+* 示例代码：
+
+  ```vue
+  <template>
+    <div class="person">
+      <h2>当前求和为：{{ sum }}</h2>
+      <button @click="changeSum">点我sum+1</button>
+    </div>
+  </template>
+  
+  <!-- vue3写法 -->
+  <script lang="ts" setup name="Person">
+    import { 
+      ref, 
+      onBeforeMount, 
+      onMounted, 
+      onBeforeUpdate, 
+      onUpdated, 
+      onBeforeUnmount, 
+      onUnmounted 
+    } from 'vue'
+  
+    // 数据
+    let sum = ref(0)
+    // 方法
+    function changeSum() {
+      sum.value += 1
+    }
+    console.log('setup')
+    // 生命周期钩子
+    onBeforeMount(()=>{
+      console.log('挂载之前')
+    })
+    onMounted(()=>{
+      console.log('挂载完毕')
+    })
+    onBeforeUpdate(()=>{
+      console.log('更新之前')
+    })
+    onUpdated(()=>{
+      console.log('更新完毕')
+    })
+    onBeforeUnmount(()=>{
+      console.log('卸载之前')
+    })
+    onUnmounted(()=>{
+      console.log('卸载完毕')
+    })
+  </script>
+  ```
+
+## 3.14. 【自定义hook】
+
+- 什么是`hook`？—— 本质是一个函数，把`setup`函数中使用的`Composition API`进行了封装，类似于`vue2.x`中的`mixin`。
+
+- 自定义`hook`的优势：复用代码, 让`setup`中的逻辑更清楚易懂。
+
+示例代码：
+
+- `useSum.ts`中内容如下：
+
+  ```js
+  import {ref,onMounted} from 'vue'
+  
+  export default function(){
+    let sum = ref(0)
+  
+    const increment = ()=>{
+      sum.value += 1
+    }
+    const decrement = ()=>{
+      sum.value -= 1
+    }
+    onMounted(()=>{
+      increment()
+    })
+  
+    //向外部暴露数据
+    return {sum,increment,decrement}
+  }		
+  ```
+  
+- `useDog.ts`中内容如下：
+
+  ```js
+  import {reactive,onMounted} from 'vue'
+  import axios,{AxiosError} from 'axios'
+  
+  export default function(){
+    let dogList = reactive<string[]>([])
+  
+    // 方法
+    async function getDog(){
+      try {
+        // 发请求
+        let {data} = await axios.get('https://dog.ceo/api/breed/pembroke/images/random')
+        // 维护数据
+        dogList.push(data.message)
+      } catch (error) {
+        // 处理错误
+        const err = <AxiosError>error
+        console.log(err.message)
+      }
+    }
+  
+    // 挂载钩子
+    onMounted(()=>{
+      getDog()
+    })
+  	
+    //向外部暴露数据
+    return {dogList,getDog}
+  }
+  ```
+
+- 组件中具体使用：
+
+  ```vue
+  <template>
+    <h2>当前求和为：{{sum}}</h2>
+    <button @click="increment">点我+1</button>
+    <button @click="decrement">点我-1</button>
+    <hr>
+    <img v-for="(u,index) in dogList.urlList" :key="index" :src="(u as string)"> 
+    <span v-show="dogList.isLoading">加载中......</span><br>
+    <button @click="getDog">再来一只狗</button>
+  </template>
+  
+  <script lang="ts">
+    import {defineComponent} from 'vue'
+  
+    export default defineComponent({
+      name:'App',
+    })
+  </script>
+  
+  <script setup lang="ts">
+    import useSum from './hooks/useSum'
+    import useDog from './hooks/useDog'
+  	
+    let {sum,increment,decrement} = useSum()
+    let {dogList,getDog} = useDog()
+  </script>
+  ```
+
+    
+
+---
+
+# 4. 路由
+
+## 4.1. 【对路由的理解】
+
+<img src="images/image-20231018144351536.png" alt="image-20231018144351536" style="zoom:20%;border-radius:40px" /> 
+
+## 4.2. 【基本切换效果】
+
+- `Vue3`中要使用`vue-router`的最新版本，目前是`4`版本。
+
+- 路由配置文件代码如下：
+
+  ```js
+  import {createRouter,createWebHistory} from 'vue-router'
+  import Home from '@/pages/Home.vue'
+  import News from '@/pages/News.vue'
+  import About from '@/pages/About.vue'
+  
+  const router = createRouter({
+  	history:createWebHistory(),
+  	routes:[
+  		{
+  			path:'/home',
+  			component:Home
+  		},
+  		{
+  			path:'/about',
+  			component:About
+  		}
+  	]
+  })
+  export default router
+  ```
+* `main.ts`代码如下：
+
+  ```js
+  import router from './router/index'
+  app.use(router)
+  
+  app.mount('#app')
+  ```
+
+- `App.vue`代码如下
+
+  ```vue
+  <template>
+    <div class="app">
+      <h2 class="title">Vue路由测试</h2>
+      <!-- 导航区 -->
+      <div class="navigate">
+        <RouterLink to="/home" active-class="active">首页</RouterLink>
+        <RouterLink to="/news" active-class="active">新闻</RouterLink>
+        <RouterLink to="/about" active-class="active">关于</RouterLink>
+      </div>
+      <!-- 展示区 -->
+      <div class="main-content">
+        <RouterView></RouterView>
+      </div>
+    </div>
+  </template>
+  
+  <script lang="ts" setup name="App">
+    import {RouterLink,RouterView} from 'vue-router'  
+  </script>
+  ```
+
+## 4.3. 【两个注意点】
+
+> 1. 路由组件通常存放在`pages` 或 `views`文件夹，一般组件通常存放在`components`文件夹。
+>
+> 2. 通过点击导航，视觉效果上“消失” 了的路由组件，默认是被**卸载**掉的，需要的时候再去**挂载**。
+
+## 4.4.【路由器工作模式】
+
+1. `history`模式
+
+   > 优点：`URL`更加美观，不带有`#`，更接近传统的网站`URL`。
+   >
+   > 缺点：后期项目上线，需要服务端配合处理路径问题，否则刷新会有`404`错误。
+   >
+   > ```js
+   > const router = createRouter({
+   >   	history:createWebHistory(), //history模式
+   >   	/******/
+   > })
+   > ```
+
+2. `hash`模式
+
+   > 优点：兼容性更好，因为不需要服务器端处理路径。
+   >
+   > 缺点：`URL`带有`#`不太美观，且在`SEO`优化方面相对较差。
+   >
+   > ```js
+   > const router = createRouter({
+   >   	history:createWebHashHistory(), //hash模式
+   >   	/******/
+   > })
+   > ```
+   
+## 4.5. 【to的两种写法】
+
+```vue
+<!-- 第一种：to的字符串写法 -->
+<router-link active-class="active" to="/home">主页</router-link>
+
+<!-- 第二种：to的对象写法 -->
+<router-link active-class="active" :to="{path:'/home'}">Home</router-link>
+```
+
+## 4.6. 【命名路由】
+
+作用：可以简化路由跳转及传参（后面就讲）。
+
+给路由规则命名：
+
+```js
+routes:[
+  {
+    name:'zhuye',
+    path:'/home',
+    component:Home
+  },
+  {
+    name:'xinwen',
+    path:'/news',
+    component:News,
+  },
+  {
+    name:'guanyu',
+    path:'/about',
+    component:About
+  }
+]
+```
+
+跳转路由：
+
+```vue
+<!--简化前：需要写完整的路径（to的字符串写法） -->
+<router-link to="/news/detail">跳转</router-link>
+
+<!--简化后：直接通过名字跳转（to的对象写法配合name属性） -->
+<router-link :to="{name:'guanyu'}">跳转</router-link>
+```
+
+
+
+## 4.7. 【嵌套路由】
+
+1. 编写`News`的子路由：`Detail.vue`
+
+2. 配置路由规则，使用`children`配置项：
+
+   ```ts
+   const router = createRouter({
+     history:createWebHistory(),
+   	routes:[
+   		{
+   			name:'zhuye',
+   			path:'/home',
+   			component:Home
+   		},
+   		{
+   			name:'xinwen',
+   			path:'/news',
+   			component:News,
+   			children:[
+   				{
+   					name:'xiang',
+   					path:'detail',
+   					component:Detail
+   				}
+   			]
+   		},
+   		{
+   			name:'guanyu',
+   			path:'/about',
+   			component:About
+   		}
+   	]
+   })
+   export default router
+   ```
+   
+3. 跳转路由（记得要加完整路径）：
+
+   ```vue
+   <router-link to="/news/detail">xxxx</router-link>
+   <!-- 或 -->
+   <router-link :to="{path:'/news/detail'}">xxxx</router-link>
+   ```
+
+4. 记得去`Home`组件中预留一个`<router-view>`
+
+   ```vue
+   <template>
+     <div class="news">
+       <nav class="news-list">
+         <RouterLink v-for="news in newsList" :key="news.id" :to="{path:'/news/detail'}">
+           {{news.name}}
+         </RouterLink>
+       </nav>
+       <div class="news-detail">
+         <RouterView/>
+       </div>
+     </div>
+   </template>
+   ```
+
+   
+
+## 4.8. 【路由传参】
+
+### query参数
+
+   1. 传递参数
+
+      ```vue
+      <!-- 跳转并携带query参数（to的字符串写法） -->
+      <router-link to="/news/detail?a=1&b=2&content=欢迎你">
+      	跳转
+      </router-link>
+      				
+      <!-- 跳转并携带query参数（to的对象写法） -->
+      <RouterLink 
+        :to="{
+          //name:'xiang', //用name也可以跳转
+          path:'/news/detail',
+          query:{
+            id:news.id,
+            title:news.title,
+            content:news.content
+          }
+        }"
+      >
+        {{news.title}}
+      </RouterLink>
+      ```
+
+   2. 接收参数：
+
+      ```js
+      import {useRoute} from 'vue-router'
+      const route = useRoute()
+      // 打印query参数
+      console.log(route.query)
+      ```
