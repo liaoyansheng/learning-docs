@@ -1459,7 +1459,7 @@ routes:[
 
    1. 传递参数
 
-      ```vue
+      ```js
       <!-- 跳转并携带query参数（to的字符串写法） -->
       <router-link to="/news/detail?a=1&b=2&content=欢迎你">
       	跳转
@@ -1489,3 +1489,798 @@ routes:[
       // 打印query参数
       console.log(route.query)
       ```
+
+
+### params参数
+
+   1. 传递参数
+
+      ```vue
+      <!-- 跳转并携带params参数（to的字符串写法） -->
+      <RouterLink :to="`/news/detail/001/新闻001/内容001`">{{news.title}}</RouterLink>
+      				
+      <!-- 跳转并携带params参数（to的对象写法） -->
+      <RouterLink 
+        :to="{
+          name:'xiang', //用name跳转
+          params:{
+            id:news.id,
+            title:news.title,
+            content:news.title
+          }
+        }"
+      >
+        {{news.title}}
+      </RouterLink>
+      ```
+
+   2. 接收参数：
+
+      ```js
+      import {useRoute} from 'vue-router'
+      const route = useRoute()
+      // 打印params参数
+      console.log(route.params)
+      ```
+
+> 备注1：传递`params`参数时，若使用`to`的对象写法，必须使用`name`配置项，不能用`path`。
+>
+> 备注2：传递`params`参数时，需要提前在规则中占位。
+
+## 4.9. 【路由的props配置】
+
+作用：让路由组件更方便的收到参数（可以将路由参数作为`props`传给组件）
+
+```js
+{
+	name:'xiang',
+	path:'detail/:id/:title/:content',
+	component:Detail,
+
+  // props的对象写法，作用：把对象中的每一组key-value作为props传给Detail组件
+  // props:{a:1,b:2,c:3}, 
+
+  // props的布尔值写法，作用：把收到了每一组params参数，作为props传给Detail组件
+  // props:true
+  
+  // props的函数写法，作用：把返回的对象中每一组key-value作为props传给Detail组件
+  props(route){
+    return route.query
+  }
+}
+```
+
+## 4.10. 【 replace属性】
+
+  1. 作用：控制路由跳转时操作浏览器历史记录的模式。
+
+  2. 浏览器的历史记录有两种写入方式：分别为```push```和```replace```：
+
+     - ```push```是追加历史记录（默认值）。
+     - `replace`是替换当前记录。
+
+  3. 开启`replace`模式：
+
+     ```vue
+     <RouterLink replace .......>News</RouterLink>
+     ```
+
+## 4.11. 【编程式导航】
+
+路由组件的两个重要的属性：`$route`和`$router`变成了两个`hooks`
+
+```js
+import {useRoute,useRouter} from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+
+console.log(route.query)
+console.log(route.parmas)
+console.log(router.push)
+console.log(router.replace)
+```
+
+## 4.12. 【重定向】
+
+1. 作用：将特定的路径，重新定向到已有路由。
+
+2. 具体编码：
+
+   ```js
+   {
+       path:'/',
+       redirect:'/about'
+   }
+   ```
+
+
+
+# 5. pinia 
+
+## 5.1【准备一个效果】
+
+<img src="./images/pinia_example.gif" alt="pinia_example" style="zoom:30%;border:3px solid" /> 
+
+## 5.2【搭建 pinia 环境】
+
+第一步：`npm install pinia`
+
+第二步：操作`src/main.ts`
+
+```ts
+import { createApp } from 'vue'
+import App from './App.vue'
+
+/* 引入createPinia，用于创建pinia */
+import { createPinia } from 'pinia'
+
+/* 创建pinia */
+const pinia = createPinia()
+const app = createApp(App)
+
+/* 使用插件 */{}
+app.use(pinia)
+app.mount('#app')
+```
+
+此时开发者工具中已经有了`pinia`选项
+
+<img src="https://cdn.nlark.com/yuque/0/2023/png/35780599/1684309952481-c67f67f9-d1a3-4d69-8bd6-2b381e003f31.png" style="zoom:80%;border:1px solid black;border-radius:10px" />
+
+## 5.3【存储+读取数据】
+
+1. `Store`是一个保存：**状态**、**业务逻辑** 的实体，每个组件都可以**读取**、**写入**它。
+
+2. 它有三个概念：`state`、`getter`、`action`，相当于组件中的： `data`、 `computed` 和 `methods`。
+
+3. 具体编码：`src/store/count.ts`
+
+   ```ts
+   // 引入defineStore用于创建store
+   import {defineStore} from 'pinia'
+   
+   // 定义并暴露一个store
+   export const useCountStore = defineStore('count',{
+     // 动作
+     actions:{},
+     // 状态
+     state(){
+       return {
+         sum:6
+       }
+     },
+     // 计算
+     getters:{}
+   })
+   ```
+
+4. 具体编码：`src/store/talk.ts`
+
+   ```js
+   // 引入defineStore用于创建store
+   import {defineStore} from 'pinia'
+   
+   // 定义并暴露一个store
+   export const useTalkStore = defineStore('talk',{
+     // 动作
+     actions:{},
+     // 状态
+     state(){
+       return {
+         talkList:[
+           {id:'yuysada01',content:'你今天有点怪，哪里怪？怪好看的！'},
+        		{id:'yuysada02',content:'草莓、蓝莓、蔓越莓，你想我了没？'},
+           {id:'yuysada03',content:'心里给你留了一块地，我的死心塌地'}
+         ]
+       }
+     },
+     // 计算
+     getters:{}
+   })
+   ```
+   
+5. 组件中使用`state`中的数据
+
+   ```vue
+   <template>
+     <h2>当前求和为：{{ sumStore.sum }}</h2>
+   </template>
+   
+   <script setup lang="ts" name="Count">
+     // 引入对应的useXxxxxStore	
+     import {useSumStore} from '@/store/sum'
+     
+     // 调用useXxxxxStore得到对应的store
+     const sumStore = useSumStore()
+   </script>
+   ```
+
+   ```vue
+   <template>
+   	<ul>
+       <li v-for="talk in talkStore.talkList" :key="talk.id">
+         {{ talk.content }}
+       </li>
+     </ul>
+   </template>
+   
+   <script setup lang="ts" name="Count">
+     import axios from 'axios'
+     import {useTalkStore} from '@/store/talk'
+   
+     const talkStore = useTalkStore()
+   </script>
+   ```
+
+   
+
+## 5.4.【修改数据】(三种方式)
+
+1. 第一种修改方式，直接修改
+
+   ```ts
+   countStore.sum = 666
+   ```
+
+2. 第二种修改方式：批量修改
+
+   ```ts
+   countStore.$patch({
+     sum:999,
+     school:'atguigu'
+   })
+   ```
+
+3. 第三种修改方式：借助`action`修改（`action`中可以编写一些业务逻辑）
+
+   ```js
+   import { defineStore } from 'pinia'
+   
+   export const useCountStore = defineStore('count', {
+     /*************/
+     actions: {
+       //加
+       increment(value:number) {
+         if (this.sum < 10) {
+           //操作countStore中的sum
+           this.sum += value
+         }
+       },
+       //减
+       decrement(value:number){
+         if(this.sum > 1){
+           this.sum -= value
+         }
+       }
+     },
+     /*************/
+   })
+   ```
+
+4. 组件中调用`action`即可
+
+   ```js
+   // 使用countStore
+   const countStore = useCountStore()
+   
+   // 调用对应action
+   countStore.increment(n.value)
+   ```
+
+
+## 5.5.【storeToRefs】
+
+- 借助`storeToRefs`将`store`中的数据转为`ref`对象，方便在模板中使用。
+- 注意：`pinia`提供的`storeToRefs`只会将数据做转换，而`Vue`的`toRefs`会转换`store`中数据。
+
+```vue
+<template>
+	<div class="count">
+		<h2>当前求和为：{{sum}}</h2>
+	</div>
+</template>
+
+<script setup lang="ts" name="Count">
+  import { useCountStore } from '@/store/count'
+  /* 引入storeToRefs */
+  import { storeToRefs } from 'pinia'
+
+	/* 得到countStore */
+  const countStore = useCountStore()
+  /* 使用storeToRefs转换countStore，随后解构 */
+  const {sum} = storeToRefs(countStore)
+</script>
+
+```
+
+## 5.6.【getters】
+
+  1. 概念：当`state`中的数据，需要经过处理后再使用时，可以使用`getters`配置。
+
+  2. 追加```getters```配置。
+
+     ```js
+     // 引入defineStore用于创建store
+     import {defineStore} from 'pinia'
+     
+     // 定义并暴露一个store
+     export const useCountStore = defineStore('count',{
+       // 动作
+       actions:{
+         /************/
+       },
+       // 状态
+       state(){
+         return {
+           sum:1,
+           school:'atguigu'
+         }
+       },
+       // 计算
+       getters:{
+         bigSum:(state):number => state.sum *10,
+         upperSchool():string{
+           return this. school.toUpperCase()
+         }
+       }
+     })
+     ```
+
+  3. 组件中读取数据：
+
+     ```js
+     const {increment,decrement} = countStore
+     let {sum,school,bigSum,upperSchool} = storeToRefs(countStore)
+     ```
+
+     
+
+## 5.7.【$subscribe】
+
+通过 store 的 `$subscribe()` 方法侦听 `state` 及其变化
+
+```ts
+talkStore.$subscribe((mutate,state)=>{
+  console.log('LoveTalk',mutate,state)
+  localStorage.setItem('talk',JSON.stringify(talkList.value))
+})
+```
+
+
+
+## 5.8. 【store组合式写法】
+
+```ts
+import {defineStore} from 'pinia'
+import axios from 'axios'
+import {nanoid} from 'nanoid'
+import {reactive} from 'vue'
+
+export const useTalkStore = defineStore('talk',()=>{
+  // talkList就是state
+  const talkList = reactive(
+    JSON.parse(localStorage.getItem('talkList') as string) || []
+  )
+
+  // getATalk函数相当于action
+  async function getATalk(){
+    // 发请求，下面这行的写法是：连续解构赋值+重命名
+    let {data:{content:title}} = await axios.get('https://api.uomg.com/api/rand.qinghua?format=json')
+    // 把请求回来的字符串，包装成一个对象
+    let obj = {id:nanoid(),title}
+    // 放到数组中
+    talkList.unshift(obj)
+  }
+  return {talkList,getATalk}
+})
+```
+
+
+
+# 6. 组件通信
+
+**`Vue3`组件通信和`Vue2`的区别：**
+
+* 移出事件总线，使用`mitt`代替。
+
+- `vuex`换成了`pinia`。
+- 把`.sync`优化到了`v-model`里面了。
+- 把`$listeners`所有的东西，合并到`$attrs`中了。
+- `$children`被砍掉了。
+
+**常见搭配形式：**
+
+<img src="./images/image-20231119185900990.png" alt="image-20231119185900990" style="zoom:60%;" /> 
+
+## 6.1. 【props】
+
+概述：`props`是使用频率最高的一种通信方式，常用与 ：**父 ↔ 子**。
+
+- 若 **父传子**：属性值是**非函数**。
+- 若 **子传父**：属性值是**函数**。
+
+父组件：
+
+```vue
+<template>
+  <div class="father">
+    <h3>父组件，</h3>
+		<h4>我的车：{{ car }}</h4>
+		<h4>儿子给的玩具：{{ toy }}</h4>
+		<Child :car="car" :getToy="getToy"/>
+  </div>
+</template>
+
+<script setup lang="ts" name="Father">
+	import Child from './Child.vue'
+	import { ref } from "vue";
+	// 数据
+	const car = ref('奔驰')
+	const toy = ref()
+	// 方法
+	function getToy(value:string){
+		toy.value = value
+	}
+</script>
+```
+
+子组件
+
+```vue
+<template>
+  <div class="child">
+    <h3>子组件</h3>
+		<h4>我的玩具：{{ toy }}</h4>
+		<h4>父给我的车：{{ car }}</h4>
+		<button @click="getToy(toy)">玩具给父亲</button>
+  </div>
+</template>
+
+<script setup lang="ts" name="Child">
+	import { ref } from "vue";
+	const toy = ref('奥特曼')
+	
+	defineProps(['car','getToy'])
+</script>
+```
+
+## 6.2. 【自定义事件】
+
+1. 概述：自定义事件常用于：**子 => 父。**
+2. 注意区分好：原生事件、自定义事件。
+
+- 原生事件：
+  - 事件名是特定的（`click`、`mosueenter`等等）	
+  - 事件对象`$event`: 是包含事件相关信息的对象（`pageX`、`pageY`、`target`、`keyCode`）
+- 自定义事件：
+  - 事件名是任意名称
+  - <strong style="color:red">事件对象`$event`: 是调用`emit`时所提供的数据，可以是任意类型！！！</strong >
+
+3. 示例：
+
+   ```html
+   <!--在父组件中，给子组件绑定自定义事件：-->
+   <Child @send-toy="toy = $event"/>
+   
+   <!--注意区分原生事件与自定义事件中的$event-->
+   <button @click="toy = $event">测试</button>
+   ```
+
+   ```js
+   //子组件中，触发事件：
+   this.$emit('send-toy', 具体数据)
+   ```
+
+## 6.3. 【mitt】
+
+概述：与消息订阅与发布（`pubsub`）功能类似，可以实现任意组件间通信。
+
+安装`mitt`
+
+```shell
+npm i mitt
+```
+
+新建文件：`src\utils\emitter.ts`
+
+```javascript
+// 引入mitt 
+import mitt from "mitt";
+
+// 创建emitter
+const emitter = mitt()
+
+/*
+  // 绑定事件
+  emitter.on('abc',(value)=>{
+    console.log('abc事件被触发',value)
+  })
+  emitter.on('xyz',(value)=>{
+    console.log('xyz事件被触发',value)
+  })
+
+  setInterval(() => {
+    // 触发事件
+    emitter.emit('abc',666)
+    emitter.emit('xyz',777)
+  }, 1000);
+
+  setTimeout(() => {
+    // 清理事件
+    emitter.all.clear()
+  }, 3000); 
+*/
+
+// 创建并暴露mitt
+export default emitter
+```
+
+接收数据的组件中：绑定事件、同时在销毁前解绑事件：
+
+```typescript
+import emitter from "@/utils/emitter";
+import { onUnmounted } from "vue";
+
+// 绑定事件
+emitter.on('send-toy',(value)=>{
+  console.log('send-toy事件被触发',value)
+})
+
+onUnmounted(()=>{
+  // 解绑事件
+  emitter.off('send-toy')
+})
+```
+
+【第三步】：提供数据的组件，在合适的时候触发事件
+
+```javascript
+import emitter from "@/utils/emitter";
+
+function sendToy(){
+  // 触发事件
+  emitter.emit('send-toy',toy.value)
+}
+```
+
+**注意这个重要的内置关系，总线依赖着这个内置关系**
+
+## 6.4.【v-model】
+
+1. 概述：实现 **父↔子** 之间相互通信。
+
+2. 前序知识 —— `v-model`的本质
+
+   ```vue
+   <!-- 使用v-model指令 -->
+   <input type="text" v-model="userName">
+   
+   <!-- v-model的本质是下面这行代码 -->
+   <input 
+     type="text" 
+     :value="userName" 
+     @input="userName =(<HTMLInputElement>$event.target).value"
+   >
+   ```
+
+3. 组件标签上的`v-model`的本质：`:moldeValue` ＋ `update:modelValue`事件。
+
+   ```vue
+   <!-- 组件标签上使用v-model指令 -->
+   <AtguiguInput v-model="userName"/>
+   
+   <!-- 组件标签上v-model的本质 -->
+   <AtguiguInput :modelValue="userName" @update:model-value="userName = $event"/>
+   ```
+
+   `AtguiguInput`组件中：
+
+   ```vue
+   <template>
+     <div class="box">
+       <!--将接收的value值赋给input元素的value属性，目的是：为了呈现数据 -->
+   		<!--给input元素绑定原生input事件，触发input事件时，进而触发update:model-value事件-->
+       <input 
+          type="text" 
+          :value="modelValue" 
+          @input="emit('update:model-value',$event.target.value)"
+       >
+     </div>
+   </template>
+   
+   <script setup lang="ts" name="AtguiguInput">
+     // 接收props
+     defineProps(['modelValue'])
+     // 声明事件
+     const emit = defineEmits(['update:model-value'])
+   </script>
+   ```
+
+4. 也可以更换`value`，例如改成`abc`
+
+   ```vue
+   <!-- 也可以更换value，例如改成abc-->
+   <AtguiguInput v-model:abc="userName"/>
+   
+   <!-- 上面代码的本质如下 -->
+   <AtguiguInput :abc="userName" @update:abc="userName = $event"/>
+   ```
+
+   `AtguiguInput`组件中：
+
+   ```vue
+   <template>
+     <div class="box">
+       <input 
+          type="text" 
+          :value="abc" 
+          @input="emit('update:abc',$event.target.value)"
+       >
+     </div>
+   </template>
+   
+   <script setup lang="ts" name="AtguiguInput">
+     // 接收props
+     defineProps(['abc'])
+     // 声明事件
+     const emit = defineEmits(['update:abc'])
+   </script>
+   ```
+
+5. 如果`value`可以更换，那么就可以在组件标签上多次使用`v-model`
+
+   ```vue
+   <AtguiguInput v-model:abc="userName" v-model:xyz="password"/>
+   ```
+
+   
+
+
+## 6.5.【$attrs 】
+
+1. 概述：`$attrs`用于实现**当前组件的父组件**，向**当前组件的子组件**通信（**祖→孙**）。
+
+2. 具体说明：`$attrs`是一个对象，包含所有父组件传入的标签属性。
+
+   >  注意：`$attrs`会自动排除`props`中声明的属性(可以认为声明过的 `props` 被子组件自己“消费”了)
+
+父组件：
+
+```vue
+<template>
+  <div class="father">
+    <h3>父组件</h3>
+		<Child :a="a" :b="b" :c="c" :d="d" v-bind="{x:100,y:200}" :updateA="updateA"/>
+  </div>
+</template>
+
+<script setup lang="ts" name="Father">
+	import Child from './Child.vue'
+	import { ref } from "vue";
+	let a = ref(1)
+	let b = ref(2)
+	let c = ref(3)
+	let d = ref(4)
+
+	function updateA(value){
+		a.value = value
+	}
+</script>
+```
+
+子组件：
+
+```vue
+<template>
+	<div class="child">
+		<h3>子组件</h3>
+		<GrandChild v-bind="$attrs"/>
+	</div>
+</template>
+
+<script setup lang="ts" name="Child">
+	import GrandChild from './GrandChild.vue'
+</script>
+```
+
+孙组件：
+
+```vue
+<template>
+	<div class="grand-child">
+		<h3>孙组件</h3>
+		<h4>a：{{ a }}</h4>
+		<h4>b：{{ b }}</h4>
+		<h4>c：{{ c }}</h4>
+		<h4>d：{{ d }}</h4>
+		<h4>x：{{ x }}</h4>
+		<h4>y：{{ y }}</h4>
+		<button @click="updateA(666)">点我更新A</button>
+	</div>
+</template>
+
+<script setup lang="ts" name="GrandChild">
+	defineProps(['a','b','c','d','x','y','updateA'])
+</script>
+```
+
+## 6.6. 【$refs、$parent】
+
+1. 概述：
+
+   * `$refs`用于 ：**父→子。**
+   * `$parent`用于：**子→父。**
+
+2. 原理如下：
+
+   | 属性      | 说明                                                     |
+   | --------- | -------------------------------------------------------- |
+   | `$refs`   | 值为对象，包含所有被`ref`属性标识的`DOM`元素或组件实例。 |
+   | `$parent` | 值为对象，当前组件的父组件实例对象。                     |
+
+## 6.7. 【provide、inject】
+
+1. 概述：实现**祖孙组件**直接通信
+
+2. 具体使用：
+
+   * 在祖先组件中通过`provide`配置向后代组件提供数据
+   * 在后代组件中通过`inject`配置来声明接收数据
+
+4. 具体编码：
+
+   【第一步】父组件中，使用`provide`提供数据
+
+   ```vue
+   <template>
+     <div class="father">
+       <h3>父组件</h3>
+       <h4>资产：{{ money }}</h4>
+       <h4>汽车：{{ car }}</h4>
+       <button @click="money += 1">资产+1</button>
+       <button @click="car.price += 1">汽车价格+1</button>
+       <Child/>
+     </div>
+   </template>
+   
+   <script setup lang="ts" name="Father">
+     import Child from './Child.vue'
+     import { ref,reactive,provide } from "vue";
+     // 数据
+     let money = ref(100)
+     let car = reactive({
+       brand:'奔驰',
+       price:100
+     })
+     // 用于更新money的方法
+     function updateMoney(value:number){
+       money.value += value
+     }
+     // 提供数据
+     provide('moneyContext',{money,updateMoney})
+     provide('car',car)
+   </script>
+   ```
+
+   > 注意：子组件中不用编写任何东西，是不受到任何打扰的
+   
+   【第二步】孙组件中使用`inject`配置项接受数据。
+   
+  ```vue
+  <template>
+    <div class="grand-child">
+      <h3>我是孙组件</h3>
+      <h4>资产：{{ money }}</h4>
+      <h4>汽车：{{ car }}</h4>
+      <button @click="updateMoney(6)">点我</button>
+    </div>
+  </template>
+
+  <script setup lang="ts" name="GrandChild">
+    import { inject } from 'vue';
+    // 注入数据
+  let {money,updateMoney} = inject('moneyContext',{money:0,updateMoney:(x:number)=>{}})
+    let car = inject('car')
+  </script>
+  ```
