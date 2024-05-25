@@ -1,4 +1,4 @@
-# 1. Vue3简介
+## 1. Vue3简介
 - 2020年9月18日，`Vue.js`发布版`3.0`版本，代号：`One Piece`（n
 - 经历了：[4800+次提交](https://github.com/vuejs/core/commits/main)、[40+个RFC](https://github.com/vuejs/rfcs/tree/master/active-rfcs)、[600+次PR](https://github.com/vuejs/vue-next/pulls?q=is%3Apr+is%3Amerged+-author%3Aapp%2Fdependabot-preview+)、[300+贡献者](https://github.com/vuejs/core/graphs/contributors)
 - 官方发版地址：[Release v3.0.0 One Piece · vuejs/core](https://github.com/vuejs/core/releases/tag/v3.0.0)
@@ -52,7 +52,7 @@
 
 
 
-# 2. 创建Vue3工程
+## 2. 创建Vue3工程
 
 ## 2.1. 【基于 vue-cli 创建】
 点击查看[官方文档](https://cli.vuejs.org/zh/guide/creating-a-project.html#vue-create)
@@ -192,7 +192,7 @@ npm create vue@latest
 ```
 
 
-# 3. Vue3核心语法
+## 3. Vue3核心语法
 ## 3.1.  【OptionsAPI 与 CompositionAPI】
 
 - `Vue2`的`API`设计是`Options`（配置）风格的。
@@ -1241,7 +1241,7 @@ function test(){
 
 ---
 
-# 4. 路由
+## 4. 路由
 
 ## 4.1. 【对路由的理解】
 
@@ -1596,7 +1596,7 @@ console.log(router.replace)
 
 
 
-# 5. pinia 
+## 5. pinia 
 
 ## 5.1【准备一个效果】
 
@@ -1878,7 +1878,7 @@ export const useTalkStore = defineStore('talk',()=>{
 
 
 
-# 6. 组件通信
+## 6. 组件通信
 
 **`Vue3`组件通信和`Vue2`的区别：**
 
@@ -2280,7 +2280,96 @@ function sendToy(){
   <script setup lang="ts" name="GrandChild">
     import { inject } from 'vue';
     // 注入数据
-  let {money,updateMoney} = inject('moneyContext',{money:0,updateMoney:(x:number)=>{}})
+    let {money,updateMoney} = inject('moneyContext',{money:0,updateMoney:(x:number)=>{}})
     let car = inject('car')
   </script>
   ```
+  
+
+## 6.8. 【pinia】
+
+参考之前`pinia`部分的讲解
+
+## 6.9. 【slot】
+
+### 1. 默认插槽
+
+![img](http://49.232.112.44/images/default_slot.png)
+
+```vue
+父组件中：
+        <Category title="今日热门游戏">
+          <ul>
+            <li v-for="g in games" :key="g.id">{{ g.name }}</li>
+          </ul>
+        </Category>
+子组件中：
+        <template>
+          <div class="item">
+            <h3>{{ title }}</h3>
+            <!-- 默认插槽 -->
+            <slot></slot>
+          </div>
+        </template>
+```
+
+### 2. 具名插槽
+
+```vue
+父组件中：
+        <Category title="今日热门游戏">
+          <template v-slot:s1>
+            <ul>
+              <li v-for="g in games" :key="g.id">{{ g.name }}</li>
+            </ul>
+          </template>
+          <template #s2>
+            <a href="">更多</a>
+          </template>
+        </Category>
+子组件中：
+        <template>
+          <div class="item">
+            <h3>{{ title }}</h3>
+            <slot name="s1"></slot>
+            <slot name="s2"></slot>
+          </div>
+        </template>
+```
+
+### 3. 作用域插槽 
+
+1. 理解：<span style="color:red">数据在组件的自身，但根据数据生成的结构需要组件的使用者来决定。</span>（新闻数据在`News`组件中，但使用数据所遍历出来的结构由`App`组件决定）
+
+3. 具体编码：
+
+   ```vue
+   父组件中：
+         <Game v-slot="params">
+         <!-- <Game v-slot:default="params"> -->
+         <!-- <Game #default="params"> -->
+           <ul>
+             <li v-for="g in params.games" :key="g.id">{{ g.name }}</li>
+           </ul>
+         </Game>
+   
+   子组件中：
+         <template>
+           <div class="category">
+             <h2>今日游戏榜单</h2>
+             <slot :games="games" a="哈哈"></slot>
+           </div>
+         </template>
+   
+         <script setup lang="ts" name="Category">
+           import {reactive} from 'vue'
+           let games = reactive([
+             {id:'asgdytsa01',name:'英雄联盟'},
+             {id:'asgdytsa02',name:'王者荣耀'},
+             {id:'asgdytsa03',name:'红色警戒'},
+             {id:'asgdytsa04',name:'斗罗大陆'}
+           ])
+         </script>
+   ```
+
+
