@@ -2600,18 +2600,10 @@ const Child = defineAsyncComponent(()=>import('./Child.vue'))
 ## 8.4.【其他】
 
 - 过渡类名 `v-enter` 修改为 `v-enter-from`、过渡类名 `v-leave` 修改为 `v-leave-from`。
-
-
 - `keyCode` 作为 `v-on` 修饰符的支持。
-
 - `v-model` 指令在组件上的使用已经被重新设计，替换掉了 `v-bind.sync。`
-
 - `v-if` 和 `v-for` 在同一个元素身上使用时的优先级发生了变化。
-
 - 移除了`$on`、`$off` 和 `$once` 实例方法。
-
 - 移除了过滤器 `filter`。
-
 - 移除了`$children` 实例 `propert`。
-
   ......

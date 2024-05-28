@@ -1,3 +1,6 @@
+## vue2 和 vue3 有什么区别
+[https://cn.vuejs.org/guide/built-ins/suspense.html#suspense]
+
 ## 扁平化数组以及数组去重
 编写一个程序，将数组扁平化，并去除其中重复部分，最终得到一个升序且不重复的数组：
 ```js
@@ -44,6 +47,13 @@ function flatten(arr) {
     return pre.concat(Array.isArray(cur) ? flatten(cur) : cur);
   }, [])
 }
+```
+
+### 方法四
+```js
+let arr22 = Array.from( new Set(arr11.toString().split(','))).sort((a,b)=>{
+    return Number(a) - Number(b)
+})
 ```
 
 ## 长列表页面滚动卡顿性能优化方法
