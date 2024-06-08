@@ -357,3 +357,26 @@ CSRF 攻击的本质是利用 cookie 会在同源请求中携带发送给服务�
 ● 被遗忘的计时器或回调函数：设置了 setInterval 定时器，而忘记取消它，如果循环函数有对外部变量的引用的话，那么这个变量会被一直留在内存中，而无法被回收。
 ● 脱离 DOM 的引用：获取一个 DOM 元素的引用，而后面这个元素被删除，由于一直保留了对这个元素的引用，所以它也无法被回收。
 ● 闭包：不合理的使用闭包，从而导致某些变量一直被留在内存当中。
+
+## Vue 子组件和父组件执行顺序
+加载渲染过程：
+1.父组件 beforeCreate
+2.父组件 created
+3.父组件 beforeMount
+4.子组件 beforeCreate
+5.子组件 created
+6.子组件 beforeMount
+7.子组件 mounted
+8.父组件 mounted
+
+更新过程：
+1. 父组件 beforeUpdate
+2.子组件 beforeUpdate
+3.子组件 updated
+4.父组件 updated
+
+销毁过程：
+1. 父组件 beforeDestroy
+2.子组件 beforeDestroy
+3.子组件 destroyed
+4.父组件 destoryed
