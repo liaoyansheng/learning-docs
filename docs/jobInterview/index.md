@@ -1,6 +1,22 @@
 ## vue2 和 vue3 有什么区别
 [https://cn.vuejs.org/guide/built-ins/suspense.html#suspense]
 
+## 正确理解setTimeout的方式(注册事件)：
+1、有两个参数，第一个参数是函数，第二参数是时间值。
+2、调用setTimeout时，把函数参数，放到事件队列中。等主程序运行完，再调用。
+```js
+fn() {
+  for(var i = 0; i<3; i++){
+    console.log(i);
+    setTimeout(function() {
+      console.log(i);
+    },0)
+  }
+},
+//输出 3、3、3
+```
+
+
 ## 扁平化数组以及数组去重
 编写一个程序，将数组扁平化，并去除其中重复部分，最终得到一个升序且不重复的数组：
 ```js
